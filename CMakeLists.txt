@@ -7,8 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_REQUIRED_FLAGS -std=c++17)
 
-set(OpenCV_DIR C:/Libraries/LibOpenCV)
-
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 find_package(OpenCV REQUIRED)
 find_package(Threads)
@@ -25,6 +24,10 @@ find_package(Qt5 REQUIRED COMPONENTS
         Gui
         Gamepad
         Concurrent)
+
+if (WIN32)
+    include(windeployqt)
+endif ()
 
 add_executable(${PROJECT_NAME} WIN32 resources/icon.rc)
 #add_executable(${PROJECT_NAME} resources/icon.rc)
@@ -108,3 +111,49 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE ${OpenCV_LIBS}
         ${CMAKE_THREAD_LIBS_INIT})
 
+add_custom_command(TARGET mur_ide POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resources/" "$<TARGET_FILE_DIR:mur_ide>/resources/"
+    )
+
+if (WIN32)
+    set(OpenCV_DIR_DLL "${OpenCV_DIR}/bin/$<CONFIGURATION>")
+
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        add_custom_command(TARGET mur_ide POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_highgui430d.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_imgproc430d.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_core430d.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_imgcodecs430d.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_videoio430d.dll" $<TARGET_FILE_DIR:mur_ide>
+            )
+    else()
+        add_custom_command(TARGET mur_ide POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_highgui430.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_imgproc430.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_core430.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_imgcodecs430.dll" $<TARGET_FILE_DIR:mur_ide>
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/opencv_videoio430.dll" $<TARGET_FILE_DIR:mur_ide>
+            )
+    endif()
+
+#    add_custom_command(TARGET simulator POST_BUILD
+#        #COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/zlib1.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/intl-8.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/ffi-7.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/z-1.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/orc-0.4-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstapp-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstreamer-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstriff-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstpbutils-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstbase-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gsttag-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstaudio-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstvideo-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/glib-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gobject-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gmodule-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        )
+
+    windeployqt(mur_ide)
+endif ()
