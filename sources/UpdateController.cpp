@@ -69,7 +69,10 @@ void UpdateController::onCheckForUpdates()
     }
 
     QProcess process;
-    process.start("maintenancetool --checkupdates");
+
+    process.setProgram("maintenancetool");
+    process.setArguments(QStringList() << "--checkupdates");
+    process.start();
 
     process.waitForFinished();
 
@@ -77,15 +80,13 @@ void UpdateController::onCheckForUpdates()
         return;
     }
 
-    QByteArray data = process.readAllStandardOutput();
-
-    if (data.isEmpty()) {
-        m_isUpdateAvailable = false;
-        return;
+    if (process.readAllStandardOutput().contains("<update")) {
+        m_isUpdateAvailable = true;
+        emit updateAvailable();
     }
-
-    m_isUpdateAvailable = true;
-    emit updateAvailable();
+    else {
+        m_isUpdateAvailable = false;
+    }
 }
 
 void UpdateController::onUpdate()
