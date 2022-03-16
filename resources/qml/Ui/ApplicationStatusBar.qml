@@ -61,5 +61,35 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter;
             text: "version: " + "0.0.8";
         }
+
+        // Update version label
+        UiLabel {
+            id: updateLabel;
+            anchors.verticalCenter: parent.verticalCenter;
+            color: "#E74C3C";
+            text: "(update available)";
+            visible: Controllers.updates.updateAvailable ? true : false;
+
+            MouseArea {
+                Loader {
+                    id: checkUpdateLoader;
+                    active: false;
+                    source: "qrc:/qml/Ui/UpdatePopup.qml";
+                }
+
+                width: parent.width;
+                height: parent.height;
+                cursorShape: Qt.PointingHandCursor;
+                acceptedButtons: Qt.LeftButton;
+                onClicked: {
+                    if(checkUpdateLoader.active) {
+                        checkUpdateLoader.item.open();
+                    }
+                    else {
+                        checkUpdateLoader.active = true;
+                    }
+                }
+            }
+        }
     }
 }
