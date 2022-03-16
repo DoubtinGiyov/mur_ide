@@ -65,6 +65,7 @@ void UpdateController::onCheckForUpdates()
     QNetworkConfigurationManager manager;
 
     if (!manager.isOnline()) {
+
         return;
     }
 
@@ -86,6 +87,7 @@ void UpdateController::onCheckForUpdates()
     }
     else {
         m_isUpdateAvailable = false;
+        emit updateAvailable();
     }
 }
 

@@ -111,4 +111,8 @@ Popup {
             }
         }
     }
+
+    onOpened: {
+        controller.onCheckForUpdates();
+    }
 }
