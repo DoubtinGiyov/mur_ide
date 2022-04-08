@@ -64,10 +64,7 @@ void UpdateController::onCheckForUpdates()
 {
     QNetworkConfigurationManager manager;
 
-    if (!manager.isOnline()) {
-
-        return;
-    }
+    if (!manager.isOnline()) return;
 
     QProcess process;
 

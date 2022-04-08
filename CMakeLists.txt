@@ -136,23 +136,23 @@ if (WIN32)
             )
     endif()
 
-#    add_custom_command(TARGET simulator POST_BUILD
+#    add_custom_command(TARGET mur_ide POST_BUILD
 #        #COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_DIR_DLL}/zlib1.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/intl-8.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/ffi-7.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/z-1.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/orc-0.4-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstapp-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstreamer-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstriff-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstpbutils-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstbase-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gsttag-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstaudio-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstvideo-1.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/glib-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gobject-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
-#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gmodule-2.0-0.dll" $<TARGET_FILE_DIR:simulator>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/intl-8.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/ffi-7.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/z-1.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/orc-0.4-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstapp-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstreamer-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstriff-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstpbutils-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstbase-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gsttag-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstaudio-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gstvideo-1.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/glib-2.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gobject-2.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${GSTREAMER_DIR_DLL}/gmodule-2.0-0.dll" $<TARGET_FILE_DIR:mur_ide>
 #        )
 
     windeployqt(mur_ide)
