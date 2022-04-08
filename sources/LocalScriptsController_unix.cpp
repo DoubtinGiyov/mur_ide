@@ -3,7 +3,7 @@
 #include "ApplicationLogger.hxx"
 #include "EditorController.hxx"
 
-// #include <Windows.h>
+#include <QApplication>
 
 namespace Ide::Ui {
 
@@ -26,7 +26,40 @@ LocalScriptsController *LocalScriptsController::Create()
 
 void LocalScriptsController::run()
 {
-    return;
+    if (m_scriptProcess->state() != QProcess::NotRunning) return;
+    
+#ifdef Q_OS_MACOS
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto sim_path = pathToDirExec + "/../../../simulator/simulator.app";
+    QString pathToPythonExec = pathToDirExec + "/../../../python/Python.framework/Versions/Current/Resources/Python.app/Contents/MacOS/Python";
+    
+    auto pathToScript = Ide::Ui::EditorController::instance->getFileUrl();
+    if (pathToScript.size() < 2)
+    {
+        ApplicationLogger::instance->addEntry("Unable to start: script does not exists.");
+        return;
+    }
+    
+    QString runCommand = pathToPythonExec + " " + pathToScript;
+    
+    QString aScript =
+        "tell application \"Terminal\"\n"
+        "   activate\n"
+        "   set shell to do script \"" + runCommand + "\"\n"
+        "end tell\n";
+    QString osascript = "/usr/bin/osascript";
+    QStringList processArguments;
+    processArguments << "-l" << "AppleScript";
+    
+    m_scriptProcess->start(osascript, processArguments);
+    m_scriptProcess->write(aScript.toUtf8());
+    m_scriptProcess->closeWriteChannel();
+#endif
+    
+    m_scriptProcess->waitForStarted();
+    m_pid = m_scriptProcess->pid();
+    ApplicationLogger::instance->addEntry("Program started.");
 }
 
 void LocalScriptsController::stop()

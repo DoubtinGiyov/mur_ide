@@ -67,9 +67,20 @@ void UpdateController::onCheckForUpdates()
     if (!manager.isOnline()) return;
 
     QProcess process;
-
+    
+#ifdef Q_OS_WIN32
     process.setProgram("maintenancetool");
     process.setArguments(QStringList() << "--checkupdates");
+#endif
+    
+#ifdef Q_OS_MACOS
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToDefaultDir = pathToDirExec + "/../../..";
+    process.setProgram(pathToDefaultDir + "/maintenancetool.app/Contents/MacOS/MaintenanceTool");
+    process.setArguments(QStringList() << "--checkupdates");
+#endif
+    
     process.start();
 
     process.waitForFinished();
@@ -98,9 +109,20 @@ void UpdateController::onUpdate()
     if (ret == QMessageBox::Cancel) {
         return;
     }
-
+    
     QStringList args("--updater");
+    
+#ifdef Q_OS_WIN32
     QProcess::startDetached("maintenancetool", args);
+#endif
+    
+#ifdef Q_OS_MACOS
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToDefaultDir = pathToDirExec + "/../../..";
+    QProcess::startDetached(pathToDefaultDir + "/maintenancetool.app/Contents/MacOS/MaintenanceTool", args);
+#endif
+    
     QApplication::exit(0);
 }
 

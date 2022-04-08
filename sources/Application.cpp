@@ -89,18 +89,35 @@ void Application::initialize()
 
 void Application::setupEnvironment()
 {
-    auto gst_path_var_name = "GST_PLUGIN_PATH";
-    auto gst_plugins = m_resourceDirectory + "gstplugins/";
+    SetEnvironmentVariable("GST_PLUGIN_PATH", m_resourceDirectory + "gstplugins/");
 
-    if (!qputenv(gst_path_var_name, gst_plugins.toUtf8())) {
-        qWarning() << "Unable to set GST_PLUGIN_PATH";
-    }
+    SetEnvironmentVariable("GST_DEBUG", QString("0"));
+    
+#ifdef Q_OS_MACOS
+    auto path = QDir{QApplication::applicationDirPath()};
+    path.cdUp();
+    auto contentsDirectory = path.absolutePath();
+    auto gstFrameworkDirectory = contentsDirectory + "/Frameworks/GStreamer.framework";
+    
+    SetEnvironmentVariable("GST_PLUGIN_SYSTEM_PATH",
+                           gstFrameworkDirectory + "/Versions/Current/lib/gstreamer-1.0");
+    
+    SetEnvironmentVariable("GST_PLUGIN_SCANNER",
+                           gstFrameworkDirectory + "/Versions/Current/libexec/gstreamer-1.0/gst-plugin-scanner");
+    
+    SetEnvironmentVariable("GTK_PATH",
+                           gstFrameworkDirectory + "/Versions/Current/");
+    
+    SetEnvironmentVariable("GIO_EXTRA_MODULES",
+                           gstFrameworkDirectory + "/Versions/Current/lib/gio/modules");
+#endif
+}
 
-    auto gst_debug_var_name = "GST_DEBUG";
-    auto gst_debug_value = QString("0");
-
-    if (!qputenv(gst_debug_var_name, gst_debug_value.toUtf8())) {
-        qWarning() << "Unable to set GST_DEBUG";
+void Application::SetEnvironmentVariable(const char* variableName, const QString variableValue)
+{
+    if (!qputenv(variableName, variableValue.toUtf8()))
+    {
+        qWarning() << "Unable to set " << variableName;
     }
 }
 

@@ -1,6 +1,7 @@
 #include "SimulatorController.hxx"
 #include "Application.hxx"
 #include <QDebug>
+#include <QApplication>
 
 namespace Ide::Ui {
 
@@ -41,10 +42,19 @@ void SimulatorController::run()
     if (m_simulator_process->state() != QProcess::NotRunning) {
         return;
     }
-
+    
+#ifdef Q_OS_WIN32
     auto sim_path = Ide::Ui::Application::getResourcesDirectory() + "/simulator/murSimulator.exe";
     m_simulator_process->setProgram(sim_path);
     m_simulator_process->start();
+#endif
+    
+#ifdef Q_OS_MACOS
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToSim = pathToDirExec + "/../../../simulator/simulator.app";
+    m_simulator_process->execute("open", {pathToSim});
+#endif
 }
 
 bool SimulatorController::isRunning()

@@ -16,6 +16,7 @@ public:
   static void initialize();
   static void setupEnvironment();
   static void addFontDirectory();
+    static void SetEnvironmentVariable(const char* variableName, const QString variableValue);
   static QString m_resourceDirectory;
 };
 }
