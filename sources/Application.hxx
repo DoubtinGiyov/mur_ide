@@ -12,11 +12,11 @@ public:
   static QString getResourcesDirectory();
   static int execute(int, char *[]);
 
-  private:
+private:
   static void initialize();
   static void setupEnvironment();
   static void addFontDirectory();
-    static void SetEnvironmentVariable(const char* variableName, const QString variableValue);
+  static void EnvironmentVariableSet(const char* variableName, const QString variableValue);
   static QString m_resourceDirectory;
 };
 }

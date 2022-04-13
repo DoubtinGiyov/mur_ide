@@ -89,9 +89,9 @@ void Application::initialize()
 
 void Application::setupEnvironment()
 {
-    SetEnvironmentVariable("GST_PLUGIN_PATH", m_resourceDirectory + "gstplugins/");
+    EnvironmentVariableSet("GST_PLUGIN_PATH", m_resourceDirectory + "gstplugins/");
 
-    SetEnvironmentVariable("GST_DEBUG", QString("0"));
+    EnvironmentVariableSet("GST_DEBUG", QString("0"));
     
 #ifdef Q_OS_MACOS
     auto path = QDir{QApplication::applicationDirPath()};
@@ -99,21 +99,21 @@ void Application::setupEnvironment()
     auto contentsDirectory = path.absolutePath();
     auto gstFrameworkDirectory = contentsDirectory + "/Frameworks/GStreamer.framework";
     
-    SetEnvironmentVariable("GST_PLUGIN_SYSTEM_PATH",
+    EnvironmentVariableSet("GST_PLUGIN_SYSTEM_PATH",
                            gstFrameworkDirectory + "/Versions/Current/lib/gstreamer-1.0");
     
-    SetEnvironmentVariable("GST_PLUGIN_SCANNER",
+    EnvironmentVariableSet("GST_PLUGIN_SCANNER",
                            gstFrameworkDirectory + "/Versions/Current/libexec/gstreamer-1.0/gst-plugin-scanner");
     
-    SetEnvironmentVariable("GTK_PATH",
+    EnvironmentVariableSet("GTK_PATH",
                            gstFrameworkDirectory + "/Versions/Current/");
     
-    SetEnvironmentVariable("GIO_EXTRA_MODULES",
+    EnvironmentVariableSet("GIO_EXTRA_MODULES",
                            gstFrameworkDirectory + "/Versions/Current/lib/gio/modules");
 #endif
 }
 
-void Application::SetEnvironmentVariable(const char* variableName, const QString variableValue)
+void Application::EnvironmentVariableSet(const char* variableName, const QString variableValue)
 {
     if (!qputenv(variableName, variableValue.toUtf8()))
     {
