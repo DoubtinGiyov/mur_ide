@@ -39,9 +39,7 @@ SimulatorController *Ide::Ui::SimulatorController::Create()
 
 void SimulatorController::run()
 {
-    if (m_simulator_process->state() != QProcess::NotRunning) {
-        return;
-    }
+    if (m_simulator_process->state() != QProcess::NotRunning) return;
     
 #ifdef Q_OS_WIN32
     auto sim_path = Ide::Ui::Application::getResourcesDirectory() + "/simulator/murSimulator.exe";
@@ -55,6 +53,15 @@ void SimulatorController::run()
     auto pathToSim = pathToDirExec + "/../../../simulator/simulator.app";
     m_simulator_process->execute("open", {pathToSim});
 #endif
+
+#ifdef Q_OS_LINUX
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToSim = pathToDirExec + "/simulator";
+    m_simulator_process->setProgram(pathToSim);
+    m_simulator_process->start();
+#endif
+
 }
 
 bool SimulatorController::isRunning()

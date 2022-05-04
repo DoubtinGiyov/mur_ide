@@ -116,11 +116,11 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE ${OpenCV_LIBS}
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_custom_command(TARGET mur_ide POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resources/" "$<TARGET_FILE_DIR:mur_ide>/resources/"
-    )
-
 if (WIN32)
+    add_custom_command(TARGET mur_ide POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resources/" "$<TARGET_FILE_DIR:mur_ide>/resources/"
+        )
+
     set(OpenCV_DIR_DLL "${OpenCV_DIR}/bin/$<CONFIGURATION>")
 
     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -162,3 +162,13 @@ if (WIN32)
 
     windeployqt(mur_ide)
 endif ()
+
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    file(GLOB_RECURSE PROJECT_RESOURCES
+        ${PROJECT_SOURCE_DIR}/resources/*
+        )
+
+    install(FILES ${PROJECT_RESOURCES} DESTINATION share/mur-ide)
+endif ()
+
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)

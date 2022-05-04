@@ -2,8 +2,8 @@
 #include "Application.hxx"
 #include "ApplicationLogger.hxx"
 #include "EditorController.hxx"
-
 #include <QApplication>
+#include <QDebug>
 
 namespace Ide::Ui {
 
@@ -55,11 +55,32 @@ void LocalScriptsController::run()
     m_scriptProcess->start(osascript, processArguments);
     m_scriptProcess->write(aScript.toUtf8());
     m_scriptProcess->closeWriteChannel();
+
+#elif defined Q_OS_LINUX
+
+    auto script_path = Ide::Ui::EditorController::instance->getFileUrl();
+
+    if (script_path.size() < 2) {
+        ApplicationLogger::instance->addEntry("Unable to start: script does not exists.");
+        return;
+    }
+
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToPython = pathToDirExec + "/../share/mur-ide/venv/bin/python3";
+
+    QString runCommand = "xterm -e \"" + pathToPython + " " + script_path + " & sleep 99999\"";
+
+    qDebug() << runCommand;
+    m_scriptProcess->start(runCommand);
+
 #endif
     
     m_scriptProcess->waitForStarted();
     m_pid = m_scriptProcess->pid();
     ApplicationLogger::instance->addEntry("Program started.");
+
+    return;
 }
 
 void LocalScriptsController::stop()

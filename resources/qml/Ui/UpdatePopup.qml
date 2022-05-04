@@ -53,8 +53,9 @@ Popup {
                font.pointSize: 12;
                color: controller.updateAvailable ? "#2B68A4" : "#E74C3C";
                width: Math.min(400, contentWidth)
-               text: controller.updateAvailable ? qsTr("Updates available") :
-                                                  qsTr("No updates available");
+               text: Qt.platform.os == "linux" ? qsTr("Use your package manager to manage updates") :
+                                            (controller.updateAvailable ? qsTr("Updates available") :
+                                                                    qsTr("No updates available"));
                wrapMode: Text.WordWrap
             }
         }

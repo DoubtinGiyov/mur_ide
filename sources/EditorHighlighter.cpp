@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QTextBlock>
 #include <QDebug>
+#include <QApplication>
+#include <QDir>
 
 namespace Ide::Ui {
 
@@ -14,7 +16,9 @@ EditorHighlighter::EditorHighlighter(QTextDocument *document)
 }
 
 void EditorHighlighter::init() {
-  auto json = IO::Read::jsonFromUrl(Ide::Ui::Application::getResourcesDirectory() + "/config/schemes/py.json");
+  auto dirExec = QDir{QApplication::applicationDirPath()};
+  auto pathToDirExec = dirExec.absolutePath();
+  auto json = IO::Read::jsonFromUrl(pathToDirExec + "/../share/mur-ide/py.json");
   auto rootObject = json[Key::scheme].toObject();
   auto ruleObjects = rootObject[Key::highlight].toArray();
 
