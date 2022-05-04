@@ -21,9 +21,6 @@ public:
     void setLocal();
     void setRemote();
     ~LocalScriptsController();
-public slots:
-    void processOutput();
-    void processError(QProcess::ProcessError error);
 signals:
     void runningStateChanged();
     void targetStateChanged();

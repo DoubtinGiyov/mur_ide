@@ -2,7 +2,6 @@
 #include "Application.hxx"
 #include "ApplicationLogger.hxx"
 #include "EditorController.hxx"
-#include "SettingsController.hxx"
 
 namespace Ide::Ui {
 
@@ -32,26 +31,14 @@ void LocalScriptsController::run()
         return;
     }
 
-//    QString runCommand = "venv/bin/python3 " + script_path;
-    QString runCommand = Ide::Ui::SettingsController::instance->getPythonPath() + " " + script_path;
+    QString runCommand = "x-terminal-emulator -e /home/oleg/repositories/install/usr/local/share/mur-ide/venv/bin/python3 " + script_path;
 
-    ApplicationLogger::instance->addEntry("Program started.\n");
     m_scriptProcess->start(runCommand);
     m_scriptProcess->waitForStarted();
     m_pid = m_scriptProcess->pid();
+    ApplicationLogger::instance->addEntry("Program started.\n");
 
     return;
-}
-
-void LocalScriptsController::processOutput() {
-    ApplicationLogger::instance->addEntry(m_scriptProcess->readAllStandardOutput());
-    ApplicationLogger::instance->addEntry(m_scriptProcess->readAllStandardError());
-}
-
-void LocalScriptsController::processError(QProcess::ProcessError error) {
-    ApplicationLogger::instance->addEntry(m_scriptProcess->errorString());
-    if (error == QProcess::FailedToStart)
-        ApplicationLogger::instance->addEntry("is python3 installed?");
 }
 
 void LocalScriptsController::stop()
@@ -113,21 +100,6 @@ void LocalScriptsController::setupProcess()
             qOverload<int>(&QProcess::finished),
             this,
             &LocalScriptsController::runningStateChanged);
-
-    connect(m_scriptProcess,
-            &QProcess::readyReadStandardOutput,
-            this,
-            &LocalScriptsController::processOutput);
-
-    connect(m_scriptProcess,
-            &QProcess::readyReadStandardError,
-            this,
-            &LocalScriptsController::processOutput);
-
-    connect(m_scriptProcess,
-            &QProcess::errorOccurred,
-            this,
-            &LocalScriptsController::processError);
 }
 
 } // namespace ide::ui

@@ -1,7 +1,6 @@
 #include "Gamepad.hxx"
 #include <QDebug>
 #include <QSettings>
-#include "SettingsController.hxx"
 
 namespace Ide::Ui {
 Gamepad *Gamepad::instance = nullptr;
@@ -12,12 +11,8 @@ Gamepad::Gamepad()
     if (instance != nullptr) {
         throw std::runtime_error{"Instance of gamepad already exists"};
     }
-
     m_gamepad = new QGamepad{};
-
     loadSettings();
-
-    this->connectGamepad();
 
     m_gamepadAxesNames[gamepadAxes::axisLeftX] = "Left  axis X";
     m_gamepadAxesNames[gamepadAxes::axisLeftY] = "Left  axis Y";
@@ -28,7 +23,6 @@ Gamepad::Gamepad()
     connect(m_gamepad, &QGamepad::axisLeftYChanged, this, &Gamepad::onLeftYChanged);
     connect(m_gamepad, &QGamepad::axisRightXChanged, this, &Gamepad::onRightXChanged);
     connect(m_gamepad, &QGamepad::axisRightYChanged, this, &Gamepad::onRightYChanged);
-    connect(QGamepadManager::instance(), &QGamepadManager::connectedGamepadsChanged, this, &Gamepad::connectGamepad);
 }
 
 void Gamepad::update()
@@ -240,42 +234,34 @@ void Gamepad::setInverseZ(bool val)
 
 void Gamepad::saveSettings()
 {
-    QSettings *settings = Ide::Ui::SettingsController::instance->settings;
-    settings->setValue("axisX", static_cast<int>(m_gamepadBinding[powerAxes::axisX]));
-    settings->setValue("axisY", static_cast<int>(m_gamepadBinding[powerAxes::axisY]));
-    settings->setValue("axisZ", static_cast<int>(m_gamepadBinding[powerAxes::axisZ]));
+    QSettings settings("settings.ini", QSettings::IniFormat);
+    settings.setValue("axisX", static_cast<int>(m_gamepadBinding[powerAxes::axisX]));
+    settings.setValue("axisY", static_cast<int>(m_gamepadBinding[powerAxes::axisY]));
+    settings.setValue("axisZ", static_cast<int>(m_gamepadBinding[powerAxes::axisZ]));
 
-    settings->setValue("axisXInv", m_isXinverse);
-    settings->setValue("axisYInv", m_isYinverse);
-    settings->setValue("axisZInv", m_isZinverse);
+    settings.setValue("axisXInv", m_isXinverse);
+    settings.setValue("axisYInv", m_isYinverse);
+    settings.setValue("axisZInv", m_isZinverse);
 }
 
 void Gamepad::loadSettings()
 {
-    QSettings *settings = Ide::Ui::SettingsController::instance->settings;
+    QSettings settings("settings.ini", QSettings::IniFormat);
     m_gamepadBinding[powerAxes::axisX] = static_cast<gamepadAxes>(
-        settings->value("axisX", 0).toInt());
+        settings.value("axisX", 0).toInt());
 
     m_gamepadBinding[powerAxes::axisY] = static_cast<gamepadAxes>(
-        settings->value("axisY", 1).toInt());
+        settings.value("axisY", 1).toInt());
 
     m_gamepadBinding[powerAxes::axisZ] = static_cast<gamepadAxes>(
-        settings->value("axisZ", 2).toInt());
+        settings.value("axisZ", 2).toInt());
 
-    m_isXinverse = settings->value("axisXInv", false).toBool();
-    m_isYinverse = settings->value("axisYInv", false).toBool();
-    m_isZinverse = settings->value("axisZInv", false).toBool();
+    m_isXinverse = settings.value("axisXInv", false).toBool();
+    m_isYinverse = settings.value("axisYInv", false).toBool();
+    m_isZinverse = settings.value("axisZInv", false).toBool();
 
     emit inverseionChanged();
     emit axisNameChanged();
-}
-
-void Gamepad::connectGamepad()
-{
-    auto gamepads = QGamepadManager::instance()->connectedGamepads();
-    if (!gamepads.isEmpty()) {
-        m_gamepad->setDeviceId(*gamepads.begin());
-    }
 }
 
 } // namespace ide::ui

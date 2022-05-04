@@ -7,7 +7,6 @@
 #include "NetworkController.hxx"
 #include "SimulatorController.hxx"
 #include "UpdateController.hxx"
-#include "SettingsController.hxx"
 
 namespace Ide::Ui {
 
@@ -60,12 +59,6 @@ UpdateController *ApplicationController::getUpdates()
 {
     return UpdateController::instance;
 }
-
-SettingsController *ApplicationController::getSettings()
-{
-    return SettingsController::instance;
-}
-
 
 ApplicationController *ApplicationController::Create()
 {
