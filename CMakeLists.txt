@@ -108,4 +108,12 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE ${OpenCV_LIBS}
         ${CMAKE_THREAD_LIBS_INIT})
 
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    file(GLOB_RECURSE PROJECT_RESOURCES
+        ${PROJECT_SOURCE_DIR}/resources/*
+        )
+
+    install(FILES ${PROJECT_RESOURCES} DESTINATION share/mur-ide)
+endif ()
+
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

@@ -11,6 +11,8 @@
 
 #include <QDesktopServices>
 #include <QMenuBar>
+#include <QApplication>
+#include <QDir>
 
 namespace Ide::Ui {
 
@@ -31,8 +33,9 @@ void ApplicationMenu::Create() {
 
 void ApplicationMenu::init()
 {
-    m_examples = IO::fileNamesFromDir(Application::instance->getResourcesDirectory()
-                                             + "examples/",
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    m_examples = IO::fileNamesFromDir(pathToDirExec + "/../share/mur-ide/",
                                          {"*.py"},
                                          IO::FileSuffix::On);
 }
@@ -171,6 +174,8 @@ void ApplicationMenu::onHelpSendFeedback()
 
 void ApplicationMenu::onHelpExample(const QString &exampleName)
 {
-    EditorController::instance->openFile(Application::getResourcesDirectory() + "examples/" + exampleName);
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    EditorController::instance->openFile(pathToDirExec + "/../share/mur-ide/" + exampleName);
 }
 }

@@ -2,6 +2,8 @@
 #include "Application.hxx"
 #include "ApplicationLogger.hxx"
 #include "EditorController.hxx"
+#include <QApplication>
+#include <QDebug>
 
 namespace Ide::Ui {
 
@@ -31,8 +33,13 @@ void LocalScriptsController::run()
         return;
     }
 
-    QString runCommand = "x-terminal-emulator -e /home/oleg/repositories/install/usr/local/share/mur-ide/venv/bin/python3 " + script_path;
+    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExec = dirExec.absolutePath();
+    auto pathToPython = pathToDirExec + "/../share/mur-ide/venv/bin/python3";
 
+    QString runCommand = "xterm -e \"" + pathToPython + " " + script_path + " & sleep 99999\"";
+
+    qDebug() << runCommand;
     m_scriptProcess->start(runCommand);
     m_scriptProcess->waitForStarted();
     m_pid = m_scriptProcess->pid();
