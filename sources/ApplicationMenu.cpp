@@ -20,24 +20,30 @@ ApplicationMenu *ApplicationMenu::instance = nullptr;
 qml::RegisterType<ApplicationMenu> ApplicationMenu::Register;
 
 ApplicationMenu::ApplicationMenu() {
-  if (instance) {
-    throw std::runtime_error("Instance of application_menu already exists");
-  }
+    if (instance) {
+        throw std::runtime_error("Instance of application_menu already exists");
+    }
 
-  init();
+    init();
 }
 
 void ApplicationMenu::Create() {
-  instance = new ApplicationMenu();
+    instance = new ApplicationMenu();
 }
 
 void ApplicationMenu::init()
 {
+    auto pathToDirExamples = Application::instance->getResourcesDirectory() + "examples/";
+
+#ifdef Q_OS_LINUX
     auto dirExec = QDir{QApplication::applicationDirPath()};
     auto pathToDirExec = dirExec.absolutePath();
-    m_examples = IO::fileNamesFromDir(pathToDirExec + "/../share/mur-ide/",
-                                         {"*.py"},
-                                         IO::FileSuffix::On);
+    pathToDirExamples = pathToDirExec + "/../share/mur-ide/";
+#endif
+
+    m_examples = IO::fileNamesFromDir(pathToDirExamples,
+                                        { "*.py" },
+                                        IO::FileSuffix::On);
 }
 
 QStringList ApplicationMenu::getExamples()
@@ -174,8 +180,14 @@ void ApplicationMenu::onHelpSendFeedback()
 
 void ApplicationMenu::onHelpExample(const QString &exampleName)
 {
-    auto dirExec = QDir{QApplication::applicationDirPath()};
+    auto pathToDirExamples = Application::instance->getResourcesDirectory() + "examples/";
+
+#ifdef Q_OS_LINUX
+    auto dirExec = QDir{ QApplication::applicationDirPath() };
     auto pathToDirExec = dirExec.absolutePath();
-    EditorController::instance->openFile(pathToDirExec + "/../share/mur-ide/" + exampleName);
+    pathToDirExamples = pathToDirExec + "/../share/mur-ide/";
+#endif
+
+    EditorController::instance->openFile(pathToDirExamples + exampleName);
 }
 }
