@@ -111,5 +111,6 @@ private:
     void setFileName(const QString &);
     void observedFileChanged(const QString &);
     void observeFile(const QString &);
+    bool IsExampleFile(const QString&);
 };
 } // namespace ide::ui

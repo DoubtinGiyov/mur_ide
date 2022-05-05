@@ -7,6 +7,7 @@
 #include "EditorSelection.hxx"
 #include "EditorUtils.hxx"
 #include "TextIO.hxx"
+#include "ApplicationMenu.hxx"
 
 #include <QDebug>
 #include <QFile>
@@ -157,7 +158,7 @@ void EditorController::run()
 
 void EditorController::saveFile()
 {
-    if (m_fileUrl.length() < 1 || !IO::fileExists(m_fileUrl)) {
+    if (m_fileUrl.length() < 1 || !IO::fileExists(m_fileUrl) || IsExampleFile(m_fileUrl)) {
         saveFileAs();
     } else {
         m_about_to_be_saved = true;
@@ -273,5 +274,12 @@ EditorController::~EditorController()
 {
     delete m_highlighter;
     m_highlighter = nullptr;
+}
+
+bool EditorController::IsExampleFile(const QString& fileUrl)
+{
+    auto menu = ApplicationMenu::instance;
+    auto pathToExamples = menu->GetPathToDirExamples();
+    return fileUrl.startsWith(pathToExamples);
 }
 } // namespace ide::ui

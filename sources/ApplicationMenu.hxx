@@ -14,6 +14,7 @@ public:
   static ApplicationMenu *instance;
   static void Create();
   QStringList getExamples();
+  QString GetPathToDirExamples();
 
   public slots:
       void onFileNew();
@@ -42,9 +43,10 @@ public:
       void onHelpExample(const QString &);
 
   private:
-  QStringList m_examples;
-  static qml::RegisterType<ApplicationMenu> Register;
-  void init();
-  ApplicationMenu();
+      QStringList m_examples;
+      static qml::RegisterType<ApplicationMenu> Register;
+      void init();
+      ApplicationMenu();
+      QString m_pathToDirExamples;
 };
 }

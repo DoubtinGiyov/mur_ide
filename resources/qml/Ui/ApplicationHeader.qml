@@ -57,7 +57,6 @@ Rectangle {
             enabled: Controllers.scripts.local ? !Controllers.scripts.running : Controllers.network.connected ? !Controllers.network.running : false;
 
             onClicked: {
-                controller.onFileSave();
                 controller.onCodeRun();
             }
         }

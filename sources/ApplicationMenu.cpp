@@ -33,15 +33,15 @@ void ApplicationMenu::Create() {
 
 void ApplicationMenu::init()
 {
-    auto pathToDirExamples = Application::instance->getResourcesDirectory() + "examples/";
+    m_pathToDirExamples = Application::instance->getResourcesDirectory() + "examples/";
 
 #ifdef Q_OS_LINUX
     auto dirExec = QDir{QApplication::applicationDirPath()};
     auto pathToDirExec = dirExec.absolutePath();
-    pathToDirExamples = pathToDirExec + "/../share/mur-ide/";
+    m_pathToDirExamples = pathToDirExec + "/../share/mur-ide/";
 #endif
 
-    m_examples = IO::fileNamesFromDir(pathToDirExamples,
+    m_examples = IO::fileNamesFromDir(m_pathToDirExamples,
                                         { "*.py" },
                                         IO::FileSuffix::On);
 }
@@ -49,6 +49,11 @@ void ApplicationMenu::init()
 QStringList ApplicationMenu::getExamples()
 {
     return m_examples;
+}
+
+QString ApplicationMenu::GetPathToDirExamples()
+{
+    return m_pathToDirExamples;
 }
 
 void ApplicationMenu::onFileNew()
@@ -78,6 +83,8 @@ void ApplicationMenu::onFindFind()
 
 void ApplicationMenu::onCodeRun()
 {
+    if (EditorController::instance->getModified()) onFileSave();
+
     if (LocalScriptsController::instance->isLocal()) {
         LocalScriptsController::instance->run();
     } else if (NetworkController::instance->getConnectionStatus()) {
