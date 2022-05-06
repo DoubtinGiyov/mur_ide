@@ -38,7 +38,7 @@ Popup {
             Text {
                color: "#F39C12";
                width: 220
-               text: qsTr("The center for  robotics development LLC.")
+               text: qsTr("The center for robotics development LLC.")
                wrapMode: Text.WordWrap
                horizontalAlignment: Text.AlignHCenter + 5;
             }
