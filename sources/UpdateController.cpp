@@ -62,6 +62,10 @@ void UpdateController::setCheckForUpdate(bool flag)
 
 void UpdateController::onCheckForUpdates()
 {
+#ifdef Q_OS_LINUX
+    return;
+#endif
+
     QNetworkConfigurationManager manager;
 
     if (!manager.isOnline()) return;
