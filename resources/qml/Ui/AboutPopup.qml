@@ -37,7 +37,7 @@ Popup {
             leftPadding: 8;
             Text {
                color: "#F39C12";
-               width: Math.min(220, contentWidth)
+               width: 220
                text: qsTr("The center for  robotics development LLC.")
                wrapMode: Text.WordWrap
                horizontalAlignment: Text.AlignHCenter + 5;
@@ -47,7 +47,7 @@ Popup {
                anchors.leftMargin: 32;
 
                color: "#2B68A4";
-               width: Math.min(200, contentWidth)
+               width: 200
                text: qsTr("murIDE v0.0.8. Powered by: <a href=\"https://www.qt.io/\">Qt</a>, <a href=\"https://opencv.org/\">OpenCV</a>,
                            <a href=\"https://gstreamer.freedesktop.org/\">GStreamer</a> and <a href=\"https://www.python.org/\">Python</a>");
                wrapMode: Text.WordWrap
